@@ -1,0 +1,6 @@
+FROM local-api
+
+WORKDIR /work
+RUN pip install pylint
+
+CMD ["pylint", "."]

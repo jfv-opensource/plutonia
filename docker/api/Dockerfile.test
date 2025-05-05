@@ -1,0 +1,9 @@
+FROM local-api
+
+RUN apt install -y python3-coverage python3-pytest
+
+
+WORKDIR /work
+COPY tests /work
+
+CMD ["pytest", "--disable-warnings", "-v", "/work"]
