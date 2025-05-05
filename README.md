@@ -1,6 +1,6 @@
 ![Logo](https://cdn2.iconfinder.com/data/icons/solar_system_png/512/Pluto.png)
 
-# Plutinia
+# Plutonia
 
 ## **Prerequisites**
 Before using this service, ensure the following are installed and configured:
