@@ -11,6 +11,7 @@ jobs:
   build:
     name: push docker image to docker hub
     runs-on: ubuntu-latest
+    environment: main
 
     steps:
       - uses: actions/checkout@v4
