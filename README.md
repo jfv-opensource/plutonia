@@ -37,6 +37,10 @@ docker run -it --name local-api -p 5000:5000 local-api
 
 Then update the ollama URL in your favorite UI to **http://localhost:5000**.
 
+## Helm run
+
+To be done
+
 ## Add tools
 
 Tools are small python files in the **/tools/** directory of the container.
