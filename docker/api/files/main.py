@@ -120,7 +120,7 @@ def generate():
     prompt = result_tools_call
 
     data['prompt']=prompt
-    data['system'] = "You are Rantanplan, an helpfull support agent"
+    data['system'] = "You are PlutonIA, an helpfull support agent"
     data['options']= {
 #        "num_ctx": 8192,
         "temperature":0
