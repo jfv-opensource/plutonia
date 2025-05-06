@@ -1,9 +1,0 @@
-apiVersion: v2
-name: plutonia
-description: PlutonIA - Ollama proxy with tools calling feature
-
-type: application
-
-version: 0.1.0
-icon: https://cdn2.iconfinder.com/data/icons/solar_system_png/128/Pluto.png)
-appVersion: "1.16.0"
