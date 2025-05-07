@@ -1,0 +1,24 @@
+version: "3.1"
+
+services:
+  ollama-ui:
+    image: jfvopensource/plutonia-ui
+    restart: always
+    ports:
+      - '5001:80'
+    environment:
+      - OLLAMA_PROXY_API_URL=http://172.18.0.1:5000
+      - UI_TITLE=PlutonIA
+
+  ollama-api:
+    image: jfvopensource/plutonia-api
+    restart: always
+    ports:
+      - '5000:5000'
+    environment:
+    - OLLAMA_API_URL=http://172.18.0.1:11434
+    - OLLAMA_QUERY_MODELS=llama3.1,llama3.2,mistral,gemma2,smollm2,qwen2.5,deepscaler,openthinker,deepseek-r1
+    - OLLAMA_QUERY_DEFAULT_MODEL=llama3.2
+    - OLLAMA_TOOLS_ENABLED=True
+    - OLLAMA_TOOLS_DEBUG=true
+    - OLLAMA_TOOLS_MODEL_NAME=qwen2.5:3b

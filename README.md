@@ -9,7 +9,7 @@ Before using this service, ensure the following are installed and configured:
 3. **curl** (for API testing)
 4. **[Ollama](https://ollama.com/)** with the wanted [models](https://ollama.com/search?c=tools).
 
-## Container parameters
+### API
 
 | Parameter | Description | Default value |
 | --------- | ----------- | ------------- |
@@ -20,22 +20,54 @@ Before using this service, ensure the following are installed and configured:
 |OLLAMA_TOOLS_API_URL| API of Ollama fro tools calling if different from OLLAMA_API_URL|None |
 |OLLAMA_TOOLS_DEBUG| Display debug logs in console |False|
 
+### UI
 
-## Container run
+| Parameter | Description | Default value |
+| --------- | ----------- | ------------- |
+| OLLAMA_PROXY_API_URL | URL of the PlutonIA API |None |
+| UI_TITLE | Title of the windows |PlutonIA|
 
-### Normal mode
+## Run
 
-~~~bash
-docker run -d --name local-api -p 5000:5000 local-api
+~~~ yaml
+version: "3.1"
+
+services:
+  ollama-ui:
+    image: jfvopensource/plutonia-ui
+    restart: always
+    ports:
+      - '5001:80'
+    environment:
+      - OLLAMA_PROXY_API_URL=http://172.18.0.1:5000
+      - UI_TITLE=PlutonIA
+
+  ollama-api:
+    image: jfvopensource/plutonia-api
+    restart: always
+    ports:
+      - '5000:5000'
+    environment:
+    - OLLAMA_API_URL=http://172.18.0.1:11434
+    - OLLAMA_QUERY_MODELS=llama3.1,llama3.2,mistral,gemma2,smollm2,qwen2.5,deepscaler,openthinker,deepseek-r1
+    - OLLAMA_QUERY_DEFAULT_MODEL=llama3.2
+    - OLLAMA_TOOLS_ENABLED=True
+    - OLLAMA_TOOLS_DEBUG=true
+    - OLLAMA_TOOLS_MODEL_NAME=qwen2.5:3b
 ~~~
 
-### Debug mode
+Edit the docker compose with :
+* the correct IP addresses `172.18.0.1` may be replaced.
+* the models to allow (must be present on the ollama instance).
+* the default model name (must be present on the instance).
+* the tool model name (must be present on the instance).
+
+Then run the command:
 
 ~~~bash
-docker run -it --name local-api -p 5000:5000 local-api
+docker compose up
 ~~~
 
-Then update the ollama URL in your favorite UI to **http://localhost:5000**.
 
 ## Add tools
 

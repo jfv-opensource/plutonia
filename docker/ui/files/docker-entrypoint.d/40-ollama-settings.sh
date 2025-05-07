@@ -11,7 +11,7 @@ fi
 
 if [ -z "$UI_TITLE" ];
 then
-    echo "var UI_TITLE='Chat with YourDev'" >> /usr/share/nginx/html/assets/js/ollama-settings.js
+    echo "var UI_TITLE='PlutonIA'" >> /usr/share/nginx/html/assets/js/ollama-settings.js
 else
     echo "var UI_TITLE='$UI_TITLE'" >> /usr/share/nginx/html/assets/js/ollama-settings.js
 fi
