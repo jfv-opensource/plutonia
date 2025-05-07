@@ -9,7 +9,7 @@ on:
 jobs:
 
   build:
-    name: push docker image to docker hub
+    name: push docker images to docker hub
     runs-on: ubuntu-latest
     environment: main
 
@@ -25,7 +25,17 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Build and push docker image
+      - name: Build and push UI docker image
+        uses: docker/build-push-action@v4
+        with:
+          platforms: linux/amd64, linux/arm64
+          context: docker/ui/
+          file: docker/ui/Dockerfile
+          push: true
+          tags: |
+            jfvopensource/plutonia-ui:latest
+
+      - name: Build and push API docker image
         uses: docker/build-push-action@v4
         with:
           platforms: linux/amd64, linux/arm64

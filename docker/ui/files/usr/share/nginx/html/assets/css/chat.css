@@ -1,0 +1,231 @@
+body {
+  /* background-color: #0b3d91; */
+  color: white;
+  background-color: white;
+  font-family: 'Arial', sans-serif;
+}
+
+bs-body-color {
+  color: red !important;
+}
+
+.user-message {
+  background-color: darkorange;;
+  color: white;
+  padding-right: 10px;
+  border-radius: 10px;
+  white-space: pre-wrap;
+  margin-left: auto;
+  margin-right: 0;
+  max-width: 90%;
+  max-width: 40%;
+  padding: 10px;
+}
+
+
+/* Style for received messages */
+.response-message {
+  background-color: #DDDDDD;
+  color: black;
+
+  padding: 10px;
+  border-radius: 10px;
+  padding-right: 20px;
+  position: relative;
+  margin-right: auto;
+  max-width: 90%;
+  /* min-width: 300px;
+  */
+
+}
+
+.response-message p {
+  margin-right: 40px;
+  /* Add more styles here */
+}
+
+/* Style for the chat container */
+#chat-container {
+  display: none;
+  margin: 0 auto;
+  overflow: auto;
+}
+
+.host-address-select {
+  background-color: red;
+  color: white;
+  padding: 1000px;
+  border-radius: 1000px;
+}
+
+#chat-history {
+  display: flex;
+  flex-direction: column;
+}
+
+.copy-button {
+  position: absolute;
+/*  bottom: 5px;
+  right: 5px;
+  margin: 0 5px 5px 0;
+  */
+}
+
+#scroll-wrapper {
+  padding-top: 20px;
+  padding-bottom: 5.5rem;
+}
+
+#input-area {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#user-input {
+  overflow-y: auto;
+  resize: none;
+  /* Prevent user from manually resizing */
+  height: 40px;
+  max-height: 200px;
+  /* Set your desired max height here */
+}
+
+@media (max-width: 600px) {
+
+  /* Adjust 600px to the breakpoint you desire */
+  .d-flex h1 {
+    display: none;
+    /* This will hide the h1 when the window width is 600px or less */
+  }
+}
+
+#send-button {
+  background-color: darkorange; !important;
+  min-height: 40px !important;
+  color: white !important;
+}
+
+.hidden {
+  display: none;
+}
+
+
+.btn-2 {
+  /* border: 1px solid #888888;
+  background-color: #AAAAAA;
+  */
+  border: 0px !important;
+  border-radius: 5px;
+  color: gray !important;
+  background-color: white !important;
+  height: 20px !important;
+  margin-left: 5px;
+}
+
+.btn-2:hover {
+  border: 1px solid darkorange; !important;
+  color:darkorange; !important;
+  background-color: white !important;
+  border-radius: 5px;
+  height: 22px !important;
+  margin-left: 5px; 
+}
+
+
+.btn-feedback-selected {
+  border: 1px solid darkorange; !important;
+  color: white!important;
+  background-color: darkorange; !important;
+  border-radius: 5px;
+  height: 22px !important;
+  margin-left: 5px; 
+}
+
+.btn-model {
+  border: 0px !important;
+  border-radius: 5px;
+  color: gray !important;
+  background-color: white !important;
+  height: 20px !important;
+  margin-left: 5px;
+}
+
+.user-icon {
+  position: relative;
+  top: -20px;
+  left: -20px;
+  width: 48px !important; /* Adjust size */
+  height: 48px !important; /* Adjust size */
+  border-radius: 50%;
+  background-color: white; /* Optional: For a circular background */
+  border: 2px solid #ddd; /* Optional: Border for the icon */
+  object-fit: cover; /* Ensures the icon fits well */
+}
+
+
+.user-message::before {
+  content: "";
+  position: relative;
+  top: -30px;
+  right: -30px;
+  width: 48px !important; 
+  height: 48px !important;
+  border-radius: 50%;
+  background-color: white; 
+  border: 2px solid #ddd; 
+  object-fit: cover; 
+  background-image: url('/assets/img/user.png'); 
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: block;
+  float: right;
+}
+
+.response-message::before {
+  content: "";
+  position: relative;
+  top: -30px;
+  right: -40px;
+  width: 48px !important; 
+  height: 48px !important;
+  border-radius: 50%;
+  background-color: white;
+  border: 2px solid #ddd;
+  object-fit: cover;
+  background-image: url('/assets/img/agent.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: block;
+  float: right;
+} 
+
+
+
+.prompt-example {
+  padding: 5px;
+  padding-top: 10px;
+  margin: 5px;
+  background-color: #eee;
+  border-radius: 5px;
+  border: 1px solid darkgray;
+  height:40px;
+  float: left;
+}
+
+.prompt-example:hover {
+  padding: 5px;
+  padding-top: 10px;
+
+  margin: 5px;
+  background-color: #ff7900;
+  color: white;
+  border-radius: 5px;
+  border: 1px solid darkgray;
+  height:40px;
+}
+
+.offcanvas-body {
+  flex-grow: 0 !important;
+}

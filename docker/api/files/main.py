@@ -153,3 +153,11 @@ def generate():
                         break
 
     return Response(generate_response(), mimetype='text/event-stream')
+
+
+@app.route('/api/feedback', methods=['GET'])
+def feedback():
+    """
+    Feedback endpoit - will be fully implemented soon
+    """
+    return json_response_maker('not available','warning'),200

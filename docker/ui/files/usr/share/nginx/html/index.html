@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/boosted@5.3.3/dist/fonts/HelvNeue55_W1G.woff2" rel="preload" as="font"
+        type="font/woff2" integrity="sha384-R6e0PFLMMV6HBvkQK22ecNfjOzyh89wSndiTC71MuvoaOnhIYgOAGVC0gW0kVN16"
+        crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/boosted@5.3.3/dist/fonts/HelvNeue75_W1G.woff2" rel="preload" as="font"
+        type="font/woff2" integrity="sha384-ylOkwNNvSwXpWNbpEhI45ruJTXyfQbIb42IxMvSGGcndZBpZ9iAmOFSUl4/Goeqz"
+        crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/boosted@5.3.3/dist/css/boosted.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <link href="assets/css/chat.css" rel="stylesheet">
+    <link id="favicon" rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
+
+    <title>RanTanPlan</title>
+
+    <script src="assets/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="assets/js/purify.min.js"></script>
+    <script src="assets/js/jquery-3.7.1.min.js"></script>
+    <script src="assets/js/ollama-settings.js" crossorigin="anonymous"></script>
+    <script src="assets/js/marked.min.js"></script>
+
+    <style>
+
+        #version {
+            font-style: italic;
+            position: fixed;
+            bottom: 0;
+            right:0;
+        }
+        header {
+            background-color: black;
+            color: white !important;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loader {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .help {
+
+            color: black;
+        }
+
+        .help-content {
+            width: 50%;
+            border: 1px solid darkgray;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            margin-left: 25%;
+            padding: 10px;
+        }
+
+        #model-select {
+            height: 40px;
+            margin-bottom: 10px;
+            margin-right: 40px;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        #setup {
+            background-color: white;
+        }
+
+
+        #setup:hover {
+            background-color: darkorange;
+        }
+
+        .display-setup {
+            visibility: visible !important;
+            transform: translateX(0%) !important;
+        }
+
+        .offcanvas-header {
+            color: black;
+        }
+
+        .offcanvas-body {
+            color: black;
+        }
+
+        /*        a[disabled="disabled"] {
+            pointer-events: none;
+        }
+            */
+    </style>
+
+    <script>
+        const VERSION = "1.0.3";
+
+        $(document).ready(function () {
+
+            console.info("VERSION:" + VERSION);
+
+            $("#title").text(UI_TITLE);
+            document.title = UI_TITLE;
+
+            $("#version").text("version: "+UI_VERSION);
+
+            session_id = Date.now();
+
+            $("#setup").on("click", function () {
+                $("#offcanvasDarkNavbar").addClass("display-setup");
+            });
+            $(".btn-close").on("click", function () {
+                $("#offcanvasDarkNavbar").removeClass("display-setup");
+            })
+
+
+            $(".prompt-example").on("click", function () {
+                console.log($(this)[0].innerText);
+                $("#user-input").val($(this)[0].innerText);
+                submitRequest();
+                $("#user-input").val('');
+
+            });
+
+
+            $("#user-input").keydown(function(e) {
+                if (e.keyCode === 13) { 
+                    e.preventDefault();
+                    submitRequest();
+                    $("#user-input").val('');
+                } });
+        });
+
+        function loading_done() {
+            $("#loader").addClass("hidden");
+            $("#chat").removeClass("hidden");
+            switch_page();
+        }
+
+        function switch_page() {
+            section = $(location)[0].hash.split("#")
+            if (section.length == 1) {
+                target_id = "chat";
+            } else {
+                target_id = section[1];
+            }
+            $(".workspace").addClass("hidden");
+
+            $("#content_" + target_id).removeClass("hidden");
+            $(".active").removeClass("active");
+            $("#menu_" + target_id).addClass("active");
+        }
+
+        $(window).on('hashchange', function (e) {
+            switch_page();
+        });
+
+
+    </script>
+</head>
+
+<body>
+    <header>
+        <div class="container-fluid">
+            <nav class="navbar navbar-dark bg-dark">
+                <div class="container-fluid">
+                    <div class="navbar-brand">
+                        <img src="/assets/img/agent.png"
+                            width="50" height="50" loading="lazy">
+                        <h1 id="title" class="title">YourDev</h1>
+                    </div>
+                </div>
+            </nav>
+            <nav class="navbar navbar-expand-lg supra" data-bs-theme="dark"
+                aria-label="Supra navigation - With an additional languages navbar example">
+                <div class="container-fluid">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a id="menu_chat" href="#chat" class="nav-link active"
+                                aria-current="chat">Chat</a></li>
+                        <li class="nav-item"><a id="menu_help" href="#help" class="nav-link">Help</a></li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <select id="model-select" class="nav-item hidden">
+                            </select>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <select id="chat-select" class="nav-item hidden">
+                            </select>
+                        </li>
+
+                        <li class="nav-item">
+                            <img id="setup" src="assets/img/hamburger.png" width="40px" />
+                        </li>
+
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+</body>
+<div id="loader" class="loader">
+    <H1>L
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        ading...
+    </H1>
+
+</div>
+<div class="chat hidden workspace" id="content_chat">
+    <div class="container">
+        <div id="scroll-wrapper">
+            <div id="chat-container" class="card">
+                <div class="card-body">
+                    <div id="chat-history"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasDarkNavbar"
+            aria-labelledby="offcanvasDarkNavbarLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Prompt examples</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"
+                    data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Close"></button>
+            </div>
+            <div class="offcanvas-body prompt-example">
+                What time is it ?
+            </div>
+            <div class="offcanvas-body prompt-example">
+                What is the day today ?
+            </div>
+            <button id="new-chat" class="hidden btn btn-dark mb-2" type="button">Reset</button>
+            <button id="save-chat" class="hidden  btn btn-secondary mb-2" type="button" data-bs-toggle="modal"
+                data-bs-target="#nameModal">Save</button>
+            <button type="button" class="hidden  btn btn-primary" id="saveName">Save</button>
+            <button id="delete-chat" class="hidden  btn btn-danger" type="button">Delete</button>
+            <input id="host-address" class="hidden  form-control" type="text" placeholder="http://localhost:11434"
+                style="width: auto;"></select>
+            <input id="system-prompt" class="hidden  form-control" type="text" placeholder="You are a helpful assistant"
+                style="width: auto;"></select>
+                <div  id="version" class="offcanvas-body">
+                </div>
+
+        </div>
+
+
+        <div class="container p-2 card" id="input-area">
+            <div class="input-group">
+                <textarea class="form-control" id="user-input" placeholder="Type your question here..."
+                    oninput="autoGrow(this)"></textarea>
+                <button id="send-button" class="btn btn-primary">Send</button>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+<div class="help hidden workspace" id="content_help">
+    <div class="help-content">
+        <h2>Help</h2>
+        The PlutonIA LLM (Large Language Model) component is a type of Natural Language Processing (NLP) model that uses
+        techniques from machine learning to analyze and generate human language.<BR>
+        <p>
+        <p>LLMs are designed to:<BR>
+            <BR>
+        <ul>
+            <li><b>Understand context</b>: They can comprehend the meaning and nuances of phrases, sentences, and
+                paragraphs.</li>
+            <li><b>Respond to questions</b>: LLMs can engage in conversation by answering questions or providing
+                relevant
+                information.</li>
+            <li><b>Generate text</b>: They can create new content using a specific style, tone, and language.</li>
+            <li><b>Translate languages</b>: LLMs can translate text from one language to another.</li>
+            <li><b>Call external tools</b>: LLM can call external tools to get get accurate data or execute complex operation on existing IT system.</li>
+        </ul>
+        <br>
+        In the current component context, it may provide some support to users using a specialized knowledge base.
+        <br>
+        <br>
+
+        <h3>User interface</h3>
+        <center>
+            <img src="assets/img/help.drawio.png" width="80%" />
+        </center>
+        <ul>
+            <li>1 - Your LLM name, depending of the context.</li>
+            <li>2 - The list of the allowed model, depending of the context. Your can change it to compare answers for
+                the same question with various models</li>
+            <li>3 - The menu to display setup features comming in the next version.</li>
+            <li>4 - The prompt input for the question.</li>
+            <li>5 - The validation button to answer the question.</li>
+        </ul>
+        <br>
+        <center>
+            <img src="assets/img/help-prompt.drawio.png" width="80%" />
+        </center>
+        <br>
+        <ul>
+            <li>6 - The answer from LLM.</li>
+            <li>7 - The positive feedback if the answer is helpfull.</li>
+            <li>8 - The negative feedback if the answer is wrong.</li>
+            <li>9 - The model used to generate the answer.</li>
+            <li>10 - The copy button to get result and paste it as text in another tool.</li>
+            <li>11 - The question.</li>
+            <li>12 - Duration.</li>
+        </ul>
+        <br>
+        <center>
+            <img src="assets/img/help-prompt-menu.drawio.png"  width="80%" />
+        </center>
+        <br>
+        <ul>
+            <li>13 - The top prompt list.</li>
+        </ul>
+        <br><br>
+        Questions, answers and feedbacks are stored to compare performances and qualities of models. It will help us to
+        target the best model for support in future. User identity is not known and not stored by this tool.
+        <br><br>
+        <br><br>
+        <br><br>
+    </div>
+
+</div>
+<div class="modal fade" id="errorModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Unable to access Ollama server</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="errorText"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="assets/js/api.js"></script>
+<script src="assets/js/chat.js"></script>
+
+</html>
